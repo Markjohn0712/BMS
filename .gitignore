@@ -41,3 +41,8 @@ example
 # generated native folders
 /ios
 /android
+
+# AI agent-skill tooling (local dev aid, not app source; .claude/skills/*
+# contains symlinks that break EAS Build's clone step on Windows)
+/.agents/
+/.claude/skills/

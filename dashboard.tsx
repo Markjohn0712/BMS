@@ -1,24 +1,31 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { ActionCard } from '@/components/action-card';
 import { HeroBanner } from '@/components/hero-banner';
+import { Sidebar } from '@/components/sidebar';
 import { StatCard } from '@/components/stat-card';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { TopBar } from '@/components/top-bar';
-import { Brand, MaxContentWidth, Spacing } from '@/constants/theme';
+import { Brand, MaxContentWidth, Spacing, TabletLandscapeContentWidth } from '@/constants/theme';
+
+const TABLET_LANDSCAPE_BREAKPOINT = 900;
 
 export default function DashboardScreen() {
   const router = useRouter();
-  const { name } = useLocalSearchParams<{ name?: string }>();
+  const { name, username } = useLocalSearchParams<{ name?: string; username?: string }>();
   const displayName = name?.trim() || 'User';
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { width } = useWindowDimensions();
+  const contentMaxWidth = width >= TABLET_LANDSCAPE_BREAKPOINT ? TabletLandscapeContentWidth : MaxContentWidth;
 
   return (
     <ThemedView style={styles.root}>
-      <TopBar title="DPWH Bridge Inspector – Dashboard" />
+      <TopBar onMenuPress={() => setSidebarOpen(true)} />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.inner}>
+        <View style={[styles.inner, { maxWidth: contentMaxWidth }]}>
           <HeroBanner />
           <View style={styles.content}>
             <ThemedText type="subtitle" style={[styles.welcome, { color: Brand.orange }]}>
@@ -29,9 +36,9 @@ export default function DashboardScreen() {
             </ThemedText>
 
             <View style={styles.statsRow}>
-              <StatCard icon="building" variant="blue" value={0} label="Total Bridges" />
-              <StatCard icon="check-circle" variant="amber" value={0} label="Completed" />
-              <StatCard icon="clock" variant="blue" value={0} label="In Progress" />
+              <StatCard value={0} label="Total Bridges" />
+              <StatCard value={0} label="Completed" />
+              <StatCard value={0} label="In Progress" />
             </View>
 
             <ThemedText type="subtitle" style={styles.sectionTitle}>
@@ -62,6 +69,13 @@ export default function DashboardScreen() {
           </View>
         </View>
       </ScrollView>
+
+      <Sidebar
+        visible={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        displayName={displayName}
+        username={username?.trim() || 'user'}
+      />
     </ThemedView>
   );
 }
@@ -75,7 +89,6 @@ const styles = StyleSheet.create({
   },
   inner: {
     width: '100%',
-    maxWidth: MaxContentWidth,
     alignSelf: 'center',
   },
   content: {
@@ -83,13 +96,13 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.four,
     paddingBottom: Spacing.six,
     gap: Spacing.three,
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   welcome: {
-    textAlign: 'center',
+    textAlign: 'left',
   },
   roleLine: {
-    textAlign: 'center',
+    textAlign: 'left',
     fontSize: 18,
     lineHeight: 24,
     fontWeight: '700',
@@ -104,6 +117,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     marginTop: Spacing.four,
     textAlign: 'center',
+    fontSize: 18,
   },
   actionsRow: {
     flexDirection: 'row',

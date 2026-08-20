@@ -21,7 +21,9 @@ export type AppIconName =
   | 'download'
   | 'export'
   | 'image'
-  | 'back';
+  | 'back'
+  | 'logout'
+  | 'notifications';
 
 const SYMBOL_MAP: Record<AppIconName, { ios: SFSymbol; android: AndroidSymbol; web: AndroidSymbol }> = {
   menu: { ios: 'line.3.horizontal', android: 'menu', web: 'menu' },
@@ -44,6 +46,8 @@ const SYMBOL_MAP: Record<AppIconName, { ios: SFSymbol; android: AndroidSymbol; w
   export: { ios: 'square.and.arrow.up', android: 'file_export', web: 'file_export' },
   image: { ios: 'photo', android: 'image', web: 'image' },
   back: { ios: 'chevron.left', android: 'arrow_back', web: 'arrow_back' },
+  logout: { ios: 'rectangle.portrait.and.arrow.right', android: 'logout', web: 'logout' },
+  notifications: { ios: 'bell', android: 'notifications', web: 'notifications' },
 };
 
 type AppIconProps = {
